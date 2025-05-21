@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Вращающийся цилиндр</title>
+  <style>
+    body { margin: 0; overflow: hidden; background-color: #f0f0f0; }
+    canvas { display: block; }
+  </style>
+  <!-- Подключаем Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+</head>
+<body>
+  <script>
+    // Создаём сцену, камеру и рендерер
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Добавляем свет
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5, 5, 5);
+    scene.add(light);
+
+    // Создаём цилиндр: радиус верхний, нижний, высота, сегменты
+    const geometry = new THREE.CylinderGeometry(2, 2, 5, 64);
+    const material = new THREE.MeshPhongMaterial({ color: 0x0088ff });
+    const cylinder = new THREE.Mesh(geometry, material);
+    scene.add(cylinder);
+
+    camera.position.z = 10;
+
+    // Анимация — вращение цилиндра
+    function animate() {
+      requestAnimationFrame(animate);
+      cylinder.rotation.x += 0.01;
+      cylinder.rotation.y += 0.02;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Обработка изменения размера окна
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
